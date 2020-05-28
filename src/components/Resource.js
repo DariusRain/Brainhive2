@@ -43,7 +43,7 @@ function Resource({
 
       {/* Title of resource that links to source */}
       {title ? (
-        <a style={style.titleLink} href={link}>
+        <a style={style.titleLink} href={link.includes("http") ? link : "#"}>
           {" "}
           <br />
           {title}
@@ -95,10 +95,10 @@ function Resource({
         {/* Toggles Comments */}
         {comments.length > 0 ? (
           <button className={"form-button margin-20"} onClick={toggleComments}>
-            {comments.length > 0  ?"Show comments" : "No comments..."}
+            {comments.length > 0  ? "Show comments" : "No comments..."}
           </button>
         ) : (
-          <p>No comments</p>
+          null
         )}
 
         {/* Toggles Video */}

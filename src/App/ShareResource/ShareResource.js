@@ -1,14 +1,16 @@
 import React from "react";
 import Form from "../../components/Form";
 import { resourceInputs } from "../../mock/inputs";
+import {connect} from "react-redux";
+import {submitResourceForm} from "../../redux/modules/app"
 
 function ShareResourcePage({submitResourceForm}) {
 
+
+
 return (
     <div className="ShareResourcePage">
- 
-
-      {/* Next features of the Form component is the buttons array [{onClick:method, buttonText}] */}
+      <span style={{ color: "dodgerBlue", fonstSize: "3rem"}}>Resource Form</span>
       <Form
         styleRef={"Form"}
         inputs={resourceInputs}
@@ -21,4 +23,6 @@ return (
 
 }
 
-export default ShareResourcePage;
+
+
+export default connect(null, {submitResourceForm})(ShareResourcePage);

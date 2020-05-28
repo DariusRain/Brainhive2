@@ -19,7 +19,7 @@ export default (state = init_state, action = {}) => {
     //   break;
 
     case SUBMIT_RESOURCE_FORM:
-    return {...state, resources: {...state.resources, [generateKey()]: {...action.payload} }}
+    return {...state, resources: {...state.resources, [generateKey()]: {...action.payload, comments: []} }}
 
     // case GET_RESOURCE_HASH:
     //   return Object.keys(action.payload)[0];
