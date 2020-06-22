@@ -4,26 +4,33 @@ const router = Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
+const {secretOrKey} = require("./config");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 const isEmpty = require("../../utils/isEmpty");
-router.post(
-  "/",
-  [
-    check("email", "Email is required.").not().isEmpty(),
-    check("email", "Must include a valid email.").isEmail(),
-    check("password", "Password is required").not().isEmpty(),
-    check("password", "Password must be over 6 characters.").isLength({
-      min: 6,
-    }),
-  ],
+
+const checkRegister = [
+  check("email", "Email is required.").not().isEmpty(),
+  check("email", "Must include a valid email.").isEmail(),
+  check("password", "Password is required").not().isEmpty(),
+  check("password", "Password must be over 6 characters.").isLength({
+    min: 6,
+  }),
+];
+
+const checkLogin = [
+  check("email", "Email is required.").not().isEmpty(),
+  check("password", "Password is required").not().isEmpty(),
+]
+
+router.route("/")
+.post(
+  checkRegister,
   async (req, res) => {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
     try {
       const { email, password } = req.body;
       const exists = User.findOne({ email });
@@ -41,7 +48,34 @@ router.post(
       return res.status(500).json({ error: { message: error.message } });
     }
   }
-);
+)
+.put( 
+  checkLogin,
+  async (req, res) => {
+      try {
+        const {email, password} = req.password;
+        const user = await User.findOne({ email });
+        if (!isEmpty(user)) {
+          return res.status(400).json({message: "Invalid email and or password"});
+        }
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        
+        if (!isValidPassword) {
+          return res.status(400).json({message: "Invalid email and or password"});
+        }
+       User.findOneByIdAndUpdate(user.id, {lastLogin: Date.now()})
+        const payload = {
+          id: user.id,
+          email
+        }
+        const token = jwt.sign(payload, secretOrKey, {});
+        return res.json({token});
+      } catch (error) {
+        console.error(error);
+      }
+})
+
+
 
 router.post("/profile", async (req, res) => {
   try {
