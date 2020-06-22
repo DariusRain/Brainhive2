@@ -1,0 +1,28 @@
+{
+  "name": "brhive2",
+  "version": "1.0.0",
+  "description": "Educational & Productive resource sharing application.",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DariusRain/brainhive2.git"
+  },
+  "author": "DariusRain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DariusRain/brainhive2/issues"
+  },
+  "homepage": "https://github.com/DariusRain/brainhive2#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.0",
+    "helmet": "^3.23.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.19"
+  }
+}
