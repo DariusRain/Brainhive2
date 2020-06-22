@@ -1,18 +1,9 @@
-import React, { Component } from "react";
-
+import React from "react";
 import Form from "./Form";
-
+import Youtube from "./Youtube";
+import Comments from "./Comments";
 import { commentInputs } from "../mock/inputs";
-// const {
-//   commentButtonText,
-//   videoButtonText,
-//   postCommentButtonText,
-//   showComments,
-//   showVideo,
 
-//   toggleCommentForm,
-//   submitComment,
-// } = this.props;
 function Resource({
   link,
   title,
@@ -121,39 +112,14 @@ function Resource({
       {/* Embed youtube video - iframe */}
       <div style={style.changingArea}>
         {showVideo
-          ? (() => {
-              if (link.includes("youtube")) {
-                const videoIdIndex = link.indexOf("?v=");
-                const videoId = link.substring(videoIdIndex + 3);
-                console.log(
-                  "rendered a video",
-                  `https://www.youtube.com/embed/${videoId}`
-                );
-                return (
-                  <div>
-                    <iframe
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      title={title}
-                      mozallowfullscreen="mozallowfullscreen"
-                      msallowfullscreen="msallowfullscreen"
-                      oallowfullscreen="oallowfullscreen"
-                      webkitallowfullscreen="webkitallowfullscreen"
-                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                );
-              }
-            })()
+          ? <Youtube link={link} title={title} />
           : null}
+
         {/* Comments */}
         {showComments && comments
-          ? comments.map((comment, index) => (
-              <div className={"Comment"} key={`comment-${index}`}>
-                {comment.user}: {comment.text}
-              </div>
-            ))
+          ? <Comments comments={comments} />
           : null}
+
         {/* Post Comment */}
         {showCommentForm ? (
           <Form

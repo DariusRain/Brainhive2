@@ -8,12 +8,12 @@ import "./App.css";
 
 
 // DR: General Components
-import NavBar from "../components/NavBar";
+import NavBar from "../../components/NavBar";
 
 //  DR: Route Components for other pages
-import ShareResourcePage from "./ShareResource/ShareResource";
-import ResourcePage from "./Resource/Resource";
-import HomePage from "./Home/Home";
+import ShareResourcePage from "../ShareResource/ShareResource";
+import ResourcePage from "../Resource/Resource";
+import HomePage from "../Home/Home";
 
 //  DR: The Entire App
 function App({ resources }) {

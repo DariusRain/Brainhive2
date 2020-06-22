@@ -1,7 +1,5 @@
 // configureStore.js
 // Create store and combine reducers
-// Dont have a comfortable understanding of this file.
-
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import {createLogger } from "redux-logger";
 import {default as reduxThunk} from "redux-thunk";
