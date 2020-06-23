@@ -13,6 +13,9 @@ app.use(express.json());
 const userRouter = require("./routes/api/users");
 app.use("/api/users", userRouter);
 
+const profileRouter = require("./routes/api/profiles");
+app.use("/api/profiles", profileRouter)l
+
 const connectDatabase = require("./config/connectDatabase");
 connectDatabase();
 
