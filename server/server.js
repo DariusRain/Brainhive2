@@ -14,7 +14,7 @@ const userRouter = require("./routes/api/users");
 app.use("/api/users", userRouter);
 
 const profileRouter = require("./routes/api/profiles");
-app.use("/api/profiles", profileRouter)l
+app.use("/api/profiles", profileRouter)
 
 const connectDatabase = require("./config/connectDatabase");
 connectDatabase();
