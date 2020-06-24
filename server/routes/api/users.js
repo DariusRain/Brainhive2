@@ -25,7 +25,7 @@ const checkLogin = [
 ];
 
 // Routes
-// @route     POST 'api/users'
+// @route     POST '/api/users'
 // @desc      User Register.
 // @access    Public
 router.post("/", checkRegister, async (req, res) => {
@@ -55,8 +55,8 @@ router.post("/", checkRegister, async (req, res) => {
 });
 
 
-// @route     PUT 'api/users'
-// @desc      Get and return a single user's profile privately.
+// @route     PUT '/api/users'
+// @desc      User Login.
 // @access    Public
 router.put("/", checkLogin, async (req, res) => {
   try {
@@ -89,5 +89,5 @@ router.put("/", checkLogin, async (req, res) => {
   }
 });
 
-// Export.
+
 module.exports = router;
