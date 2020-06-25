@@ -8,6 +8,8 @@ const { secretOrKey } = require("../../config");
 const User = require("../../models/User");
 const isEmpty = require("../../utils/isEmpty");
 
+
+// Validators.
 const checkRegister = [
   check("email", "Email is required.").not().isEmpty(),
   check("email", "Must include a valid email.").isEmail(),
@@ -22,7 +24,13 @@ const checkLogin = [
   check("password", "Password is required").not().isEmpty(),
 ];
 
+// Routes
+// @route     POST '/api/users'
+// @desc      User Register.
+// @access    Public
 router.post("/", checkRegister, async (req, res) => {
+  
+  // Validate req.body with checkRegister from the above validators.
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -46,6 +54,10 @@ router.post("/", checkRegister, async (req, res) => {
   }
 });
 
+
+// @route     PUT '/api/users'
+// @desc      User Login.
+// @access    Public
 router.put("/", checkLogin, async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -56,30 +68,26 @@ router.put("/", checkLogin, async (req, res) => {
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
-    
+
     if (!isValidPassword) {
       return res.status(400).json({ message: "Invalid email and or password" });
     }
 
-    await User.findByIdAndUpdate(
-      user.id,
-      { lastLogin: Date.now() },
-      { useAndModify: true }
-    );
+    await User.findByIdAndUpdate(user.id, { $set: { lastLogin: Date.now() } });
 
     const payload = {
       id: user.id,
       email,
     };
 
-    const token = jwt.sign(payload, secretOrKey, {});
+    const token = jwt.sign(payload, secretOrKey, { expiresIn: 3600 * 6 });
 
     return res.status(200).json({ token });
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: { message: error } });
   }
 });
+
 
 module.exports = router;
