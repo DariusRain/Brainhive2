@@ -4,7 +4,6 @@ const isEmpty = require("../../utils/isEmpty");
 const Profile = require("../../models/Profile");
 const auth = require("../../routes/middleware/auth");
 
-
 // @route     POST '/api/profiles'
 // @desc      New Profile.
 // @access    Private -> Registered users.
@@ -29,8 +28,12 @@ router.post("/", async (req, res) => {
 // @desc      Return users individual profile.
 // @access    Private -> Registered users
 router.get("/self", auth, async (req, res) => {
+  console.log(12, req.user);
   try {
-    const profile = await Profile.findOne({userId: req.user.id});
+    const profile = await Profile.findOne({ userId: req.user.id });
+    if (isEmpty(profile)) {
+      return res.status(400).json({ error: {message: "Invalid User."}});
+    }
     return res.status(200).json({ profile });
   } catch (error) {
     console.error(error);
