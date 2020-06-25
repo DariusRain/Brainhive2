@@ -32,7 +32,7 @@ router.get("/self", auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ userId: req.user.id });
     if (isEmpty(profile)) {
-      return res.status(400).json({ error: {message: "Invalid User."}});
+      return res.status(400).json({ error: { message: "Invalid User." } });
     }
     return res.status(200).json({ profile });
   } catch (error) {
