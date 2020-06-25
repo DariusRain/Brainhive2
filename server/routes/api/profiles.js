@@ -42,7 +42,7 @@ router.get("/self", auth, async (req, res) => {
 });
 
 // @route     GET '/api/profiles/all'
-// @desc      Return all users profiles, but user.
+// @desc      Return all users profiles.
 // @access    Private -> Registered users
 router.get("/all", auth, async (req, res) => {
   try {
