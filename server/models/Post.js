@@ -26,6 +26,22 @@ const postSchema = Schema({
       "lead",
     ],
   },
+  link: String,
+  resourceTypes: {
+    type: String,
+    enum: [
+      "Atrticle",
+      "Video",
+      "Website",
+      "Slide Show",
+      "eBook",
+      "News Letter",
+      "Blog",
+      "Other",
+    ],
+  },
+  publishedAt: Date,
+  videoLength: Number,
 });
 
 module.exports = models("Post", postSchema);
