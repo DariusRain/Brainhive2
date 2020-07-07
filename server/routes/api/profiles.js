@@ -8,7 +8,15 @@ const auth = require("../../routes/middleware/auth");
 // @desc      New Profile.
 // @access    Private -> Registered users.
 router.post("/", 
-// check("")
+check("fName", "First Name is required.").not().isEmpty(),
+check("lName", "Last Name is required.").not().isEmpty(),
+check("name", "Name is required.").not().isEmpty(),
+check("githubUrl", "Invalid URL." ).optional.isURL,
+check("twitterUrl", "Invalid URL.").optional().isURL(),
+check("youtubeUrl", "Invalid URl.").optional().isURL(),
+// summary: String,
+// timestamps: String,
+// cheavatar: String
 check("email", 'Invalid Email').isEmail(),
 async (req, res) => {
   try {
