@@ -1,13 +1,16 @@
 const { Router } = require("express");
+const {check, validationResult} = require("express-validator")
 const router = Router();
 const isEmpty = require("../../utils/isEmpty");
 const Profile = require("../../models/Profile");
 const auth = require("../../routes/middleware/auth");
-
 // @route     POST '/api/profiles'
 // @desc      New Profile.
 // @access    Private -> Registered users.
-router.post("/", async (req, res) => {
+router.post("/", 
+// check("")
+check("email", 'Invalid Email').isEmail(),
+async (req, res) => {
   try {
     const profile = await Profile.create(req.body);
 
