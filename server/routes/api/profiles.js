@@ -1,24 +1,26 @@
 const { Router } = require("express");
-const {check, validationResult} = require("express-validator")
+const { check, validationResult } = require("express-validator");
 const router = Router();
 const isEmpty = require("../../utils/isEmpty");
 const Profile = require("../../models/Profile");
 const auth = require("../../routes/middleware/auth");
+
+const profileValidator = [
+  check("fName", "First Name is required.").not().isEmpty(),
+  check("lName", "Last Name is required.").not().isEmpty(),
+  check("name", "Name is required.").not().isEmpty(),
+  check("githubUrl", "Invalid URL.").optional.isURL,
+  check("twitterUrl", "Invalid URL.").optional().isURL(),
+  check("youtubeUrl", "Invalid URl.").optional().isURL(),
+  check("email", "Invalid Email").isEmail(),
+];
+
 // @route     POST '/api/profiles'
 // @desc      New Profile.
 // @access    Private -> Registered users.
-router.post("/", 
-check("fName", "First Name is required.").not().isEmpty(),
-check("lName", "Last Name is required.").not().isEmpty(),
-check("name", "Name is required.").not().isEmpty(),
-check("githubUrl", "Invalid URL." ).optional.isURL,
-check("twitterUrl", "Invalid URL.").optional().isURL(),
-check("youtubeUrl", "Invalid URl.").optional().isURL(),
-// summary: String,
-// timestamps: String,
-// cheavatar: String
-check("email", 'Invalid Email').isEmail(),
-async (req, res) => {
+router.post("/", profileValidator, async (req, res) => {
+  const vResult = validationResult(req);
+  if(isEmpty(vResult)) return res.status(400).json(vResult);
   try {
     const profile = await Profile.create(req.body);
 

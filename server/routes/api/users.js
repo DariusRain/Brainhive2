@@ -17,8 +17,6 @@ const checkRegister = [
   check("password", "Password must be over 6 characters.").isLength({
     min: 6,
   }),
-  // Express Valdiator: Check Urls
-  check("githubUrl", "Invalid URL").optional().isURL();
 ];
 
 const checkLogin = [
