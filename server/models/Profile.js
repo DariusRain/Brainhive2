@@ -33,7 +33,7 @@ const profileSchema = new mongoose.Schema({
   avatar: String
 });
 
-module.exports = mongoose.model("Profile", profileSchema);
+module.exports = Profile = mongoose.model("profiles", profileSchema);
 
 /*
   userId
