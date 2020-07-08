@@ -1,5 +1,6 @@
 const { Schema, models } = require("mongoose");
-const postSchema = Schema({
+const { commentSchema } = require("./Comment");
+const postSchema = new Schema({
   poster: {
     type: Schema.Types.ObjectId,
     ref: "profiles",
@@ -42,6 +43,10 @@ const postSchema = Schema({
   },
   publishedAt: Date,
   videoLength: Number,
+  comments: {
+    type: [commentSchema],
+    default: [],
+  },
 });
 
 module.exports = models("Post", postSchema);
