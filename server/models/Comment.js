@@ -9,4 +9,4 @@ const commentSchema = new Schema({
     } 
 }, {timestamps: {}});
 
-module.exports = commentSchema;
+module.exports = Commment = commentSchema;

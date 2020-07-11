@@ -1,5 +1,5 @@
-const { Schema, models } = require("mongoose");
-const { commentSchema } = require("./Comment");
+const { Schema, model } = require("mongoose");
+const { Comment } = require("./Comment");
 const postSchema = new Schema({
   poster: {
     type: Schema.Types.ObjectId,
@@ -44,9 +44,9 @@ const postSchema = new Schema({
   publishedAt: Date,
   videoLength: Number,
   comments: {
-    type: [commentSchema],
+    type: [Comment],
     default: [],
   },
 });
 
-module.exports = Post = models("posts", postSchema);
+module.exports = Post = model("Posts", postSchema);
