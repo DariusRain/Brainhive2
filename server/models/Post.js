@@ -47,6 +47,11 @@ const postSchema = new Schema({
     type: [Comment],
     default: [],
   },
+  likes: { type: [Schema.Types.ObjectId], default: [] },
+  rating: {
+    type:[{user: Schema.Types.ObjectId, score: Number}],
+    default:[]
+  }
 });
 
 module.exports = Post = model("Posts", postSchema);
