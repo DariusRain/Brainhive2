@@ -26,8 +26,9 @@ const postSchema = new Schema({
       "senior",
       "lead",
     ],
+    required: true
   },
-  link: String,
+  link: {type: String, required: true,},
   resourceTypes: {
     type: String,
     enum: [
@@ -40,7 +41,9 @@ const postSchema = new Schema({
       "Blog",
       "Other",
     ],
+    required: true
   },
+  cost: {type: Number, required: true},
   publishedAt: Date,
   videoLength: Number,
   comments: {
