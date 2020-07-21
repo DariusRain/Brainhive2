@@ -1,8 +1,9 @@
 const { Router } = require("express");
 const router = Router();
-const {check, validationResult} = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const auth = require("../middleware/auth");
 const Post = require("../../models/Post");
+const Profile = require("../../models/Profile");
 // const User = require("../../models/User");
 // const Proifle = require("../../models/Profile");
 
@@ -43,22 +44,37 @@ router.post(
     ]),
     check("cost", "Cost is required").notEmpty(),
     check("cost", "A valid number is required").isNumeric(),
-    check("publishedAt", 'Date should be in this format MM/DD/YYYY').optional().isISO8061(),
-    check("videoLength", "Length should be HOUR:MIN AM/PM").optional().isNumeric(),
-    check("timeToComplete", "Length should be HOUR:MIN AM/PM").optional().isNumeric()
+    check("publishedAt", "Date should be in this format MM/DD/YYYY")
+      .optional()
+      .isISO8061(),
+    check("videoLength", "Length should be HOUR:MIN AM/PM")
+      .optional()
+      .isNumeric(),
+    check("timeToComplete", "Length should be HOUR:MIN AM/PM")
+      .optional()
+      .isNumeric(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()})
+      return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-        await Post.create(req.body);
-        return res.status(201).json({msg: "Published resoucrce."})    
+      // Find profile with user ID and extract the id from it
+      const { _id } = await Profile.findOne({ user: req.user.id });
+      const postData = { ...req.body };
+
+      // Attach the id to the postData.
+      postData.poster = _id;
+
+      // Create Post
+      const post = await Post.create(postData);
+      // Respond with post
+      return res.status(201).json(post);
     } catch (err) {
-        console.error(error);
-        return res.status(500).json({msg: "500 Server Error."})
+      console.error(error);
+      return res.status(500).json({ msg: "500 Server Error." });
     }
   }
 );
