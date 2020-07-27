@@ -15,18 +15,19 @@ const profileValidator = [
   check("email", "Invalid Email").isEmail(),
 ];
 
-// // @route     GET '/api/profiles'
-// // @desc      Get single profile w/ user ID.
-// // @access    Private -> Registered users.
-// router.get("/", auth, async (req, res) => {
-//   try {
-//     const profile = await Profile.findOne({ user: req.user.id });
-//     res.json(profile);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ msg: "Server Error." });
-//   }
-// });
+// @route     GET '/api/profiles/all'
+// @desc      Return all users profiles.
+// @access    Private -> Registered users
+router.get("/all", auth, async (req, res) => {
+  try {
+    const profiles = await Profile.find();
+    return res.status(200).json({ profiles });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: { message: error.message } });
+  }
+});
+
 
 // @route     POST '/api/profiles'
 // @desc      New Profile.
@@ -52,17 +53,24 @@ router.post("/", profileValidator, async (req, res) => {
 
 
 
-// @route     GET '/api/profiles/all'
-// @desc      Return all users profiles.
-// @access    Private -> Registered users
-router.get("/all", auth, async (req, res) => {
-  try {
-    const profiles = await Profile.find();
-    return res.status(200).json({ profiles });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: { message: error.message } });
-  }
-});
 
 module.exports = router;
+
+
+
+
+// Class Version. (Allready did this part see "/self")
+
+// @route     GET '/api/profiles'
+// @desc      Get single profile w/ user ID.
+// @access    Private -> Registered users.
+
+// router.get("/", auth, async (req, res) => {
+//   try {
+//     const profile = await Profile.findOne({ user: req.user.id });
+//     res.json(profile);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ msg: "Server Error." });
+//   }
+// });
