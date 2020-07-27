@@ -10,7 +10,33 @@ const Profile = require("../../models/Profile");
 // @route GET /api/posts
 // @desc Test route
 // @access RIVATE
-router.get("/test", auth, (req, res) => res.status(200).json({ test: true }));
+// router.get("/test", auth, (req, res) => res.status(200).json({ test: true }));
+
+// @route GET /api/posts
+// @desc Get all posats
+// @access PRIVATE
+router.get("/", async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.status(200).json(allPosts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({msg: "Server error"})
+  }
+});
+
+// @route GET /api/posts/:id
+// @desc Get Single post
+// @access PRIVATE
+router.get("/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    res.status(200).json(post);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({msg: "Server error"})
+  }
+});
 
 // @route GET /api/posts
 // @desc Test route
@@ -70,6 +96,7 @@ router.post(
 
       // Create Post
       const post = await Post.create(postData);
+      
       // Respond with post
       return res.status(201).json(post);
     } catch (err) {

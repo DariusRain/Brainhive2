@@ -15,6 +15,20 @@ const profileValidator = [
   check("email", "Invalid Email").isEmail(),
 ];
 
+// @route     GET '/api/profiles'
+// @desc      New Profile.
+// @access    Private -> Registered users.
+router.get("/", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOneById(req.user.id);
+    res.json(profile);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({msg: "Server Error."})
+  }
+})
+
+
 // @route     POST '/api/profiles'
 // @desc      New Profile.
 // @access    Private -> Registered users.
