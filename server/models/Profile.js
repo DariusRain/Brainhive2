@@ -1,57 +1,70 @@
 const mongoose = require("mongoose");
-const profileSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
-    required: true,
+const Schema = mongoose.Schema;
+
+const commentSchema = new Schema(
+  {
+    profile: {
+      type: Schema.Types.ObjectId,
+      ref: "profiles",
+    },
+    text: String,
+    likes: { type: [Schema.Types.ObjectId], default: [] },
   },
-  resourceIds: {
-    type: [mongoose.Schema.Types.ObjectId]
+  { timestamps: {} }
+);
+
+const postSchema = new Schema({
+  poster: {
+    type: Schema.Types.ObjectId,
+    ref: "profiles",
   },
-  fName: {
+  author: { type: String, required: true },
+  skillLevel: {
     type: String,
+    enum: [
+      "Beginner",
+      "Intermediate",
+      "Advanced",
+      "Associate",
+      "Junior",
+      "Senior",
+      "Lead",
+    ],
     required: true,
   },
-  lName: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  certifications: {
-    type: [String],
-  },
-  occupation:String,
-  city: String,
-  state: String,
-  githubUrl: String,
-  twitterUrl: String,
-  youtubeUrl: String,
+  cohort: String,
+  title: { type: String, required: true },
+  categories: { type: [String], default: [] },
   summary: String,
-  timestamps: String,
-  avatar: String
+  link: { type: String, required: true },
+  resourceType: {
+    type: "String",
+    enum: [
+      "Article",
+      "Video",
+      "SlideShow",
+      "Book",
+      "eBook",
+      "PDF",
+      "PodCast",
+      "Website",
+      "Newsletter",
+      "Blog",
+      "Other",
+    ],
+    required: true,
+  },
+  publishedAt: Date,
+  videoLength: Number,
+  timeToComplete: Number,
+  cost: { type: Number, required: true },
+  comments: { type: [commentSchema], default: [] },
+  // TODO rating
+  // only users and rate once. need id and score, [objects id and the score]
+  rating: {
+    type: [{ user: mongoose.Schema.Types.ObjectId, score: Number }],
+    default: [],
+  },
 });
 
-module.exports = Profile = mongoose.model("profiles", profileSchema);
-
-// COPY FIELDS:
-/*
-  userId
-  fName
-  lName
-  name
-  occupation
-  educationLevel
-  resourceIds: [] - optional
-  certifications
-  city
-  state
-  githubUrl
-  twitterUrl
-  youtubeUrl
-  summary
-  timestamps
-  avatar
-*/
+module.exports = Post = mongoose.model("posts", postSchema);

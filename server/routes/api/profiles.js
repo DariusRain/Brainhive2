@@ -15,12 +15,26 @@ const profileValidator = [
   check("email", "Invalid Email").isEmail(),
 ];
 
+// @route     GET '/api/profiles/all'
+// @desc      Return all users profiles.
+// @access    Private -> Registered users
+router.get("/all", auth, async (req, res) => {
+  try {
+    const profiles = await Profile.find();
+    return res.status(200).json({ profiles });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: { message: error.message } });
+  }
+});
+
+
 // @route     POST '/api/profiles'
 // @desc      New Profile.
 // @access    Private -> Registered users.
 router.post("/", profileValidator, async (req, res) => {
   const vResult = validationResult(req);
-  if(isEmpty(vResult)) return res.status(400).json(vResult);
+  if (isEmpty(vResult)) return res.status(400).json(vResult);
   try {
     const profile = await Profile.create(req.body);
 
@@ -37,34 +51,26 @@ router.post("/", profileValidator, async (req, res) => {
   }
 });
 
-// @route     GET '/api/profiles/self'
-// @desc      Return users individual profile.
-// @access    Private -> Registered users
-router.get("/self", auth, async (req, res) => {
-  console.log(12, req.user);
-  try {
-    const profile = await Profile.findOne({ userId: req.user.id });
-    if (isEmpty(profile)) {
-      return res.status(400).json({ error: { message: "Invalid User." } });
-    }
-    return res.status(200).json({ profile });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: { message: error.message } });
-  }
-});
 
-// @route     GET '/api/profiles/all'
-// @desc      Return all users profiles.
-// @access    Private -> Registered users
-router.get("/all", auth, async (req, res) => {
-  try {
-    const profiles = await Profile.find();
-    return res.status(200).json({ profiles });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: { message: error.message } });
-  }
-});
+
 
 module.exports = router;
+
+
+
+
+// Class Version. (Allready did this part see "/self")
+
+// @route     GET '/api/profiles'
+// @desc      Get single profile w/ user ID.
+// @access    Private -> Registered users.
+
+// router.get("/", auth, async (req, res) => {
+//   try {
+//     const profile = await Profile.findOne({ user: req.user.id });
+//     res.json(profile);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ msg: "Server Error." });
+//   }
+// });
