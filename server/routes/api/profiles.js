@@ -28,6 +28,18 @@ router.get("/all", auth, async (req, res) => {
   }
 });
 
+// @route     GET '/api/profiles/:id'
+// @desc      Return user's profile by id.
+// @access    Private -> Registered users
+router.get("/:id", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id);
+    return res.status(200).json({ profile });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: { message: error.message } });
+  }
+});
 
 // @route     POST '/api/profiles'
 // @desc      New Profile.
@@ -51,13 +63,30 @@ router.post("/", profileValidator, async (req, res) => {
   }
 });
 
+// @route     DELETE '/api/profiles'
+// @desc      New Profile.
+// @access    Private -> Registered users.
+router.delete("/", profileValidator, async (req, res) => {
+  const vResult = validationResult(req);
+  if (isEmpty(vResult)) return res.status(400).json(vResult);
+  try {
+    const profile = await Profile.findOneAndRemove({user: req.user.id});
 
+    if (isEmpty(profile)) {
+      return res
+        .status(400)
+        .json({ errors: { message: "No Profile found" } });
+    }
 
+    return res.status(201).json({ msg: "Profile deleted" });
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: { message: error.message } });
+  }
+});
 
 module.exports = router;
-
-
-
 
 // Class Version. (Allready did this part see "/self")
 
