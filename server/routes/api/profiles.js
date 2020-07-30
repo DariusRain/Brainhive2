@@ -46,10 +46,10 @@ router.get("/:id", auth, async (req, res) => {
 // @access    Private -> Registered users.
 router.post("/", profileValidator, async (req, res) => {
   const vResult = validationResult(req);
-  if (isEmpty(vResult)) { 
+  if (isEmpty(vResult)) {
     return res.status(400).json(vResult);
   }
-    try {
+  try {
     const profile = await Profile.create(req.body);
 
     if (isEmpty(profile)) {
@@ -74,12 +74,13 @@ router.put("/", auth, profileValidator, async (req, res) => {
   try {
     const updatedProfile = await Profile.findOneAndUpdate(
       { user: req.user.id },
-      req.body
+      { $set: { ...req.body } },
+      { new: true }
     );
-    if(!updatedProfile) {
-      res.status(400).json({msg: "Bad request."})
+    if (!updatedProfile) {
+      res.status(400).json({ msg: "Bad request." });
     }
-    res.status(201).json(updatedProfile)
+    res.status(201).json(updatedProfile);
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: { message: error.message } });
