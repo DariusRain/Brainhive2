@@ -9,7 +9,7 @@ const profileValidator = [
   check("fName", "First Name is required.").not().isEmpty(),
   check("lName", "Last Name is required.").not().isEmpty(),
   check("name", "Name is required.").not().isEmpty(),
-  check("githubUrl", "Invalid URL.").optional.isURL,
+  check("githubUrl", "Invalid URL.").optional().isURL(),
   check("twitterUrl", "Invalid URL.").optional().isURL(),
   check("youtubeUrl", "Invalid URl.").optional().isURL(),
   check("email", "Invalid Email").isEmail(),
@@ -46,8 +46,10 @@ router.get("/:id", auth, async (req, res) => {
 // @access    Private -> Registered users.
 router.post("/", profileValidator, async (req, res) => {
   const vResult = validationResult(req);
-  if (isEmpty(vResult)) return res.status(400).json(vResult);
-  try {
+  if (isEmpty(vResult)) { 
+    return res.status(400).json(vResult);
+  }
+    try {
     const profile = await Profile.create(req.body);
 
     if (isEmpty(profile)) {
@@ -66,7 +68,7 @@ router.post("/", profileValidator, async (req, res) => {
 // @route     PUT '/api/profiles'
 // @desc      Update Profile.
 // @access    Private -> Registered users.
-router.put("/", auth, authvalidator, async (req, res) => {
+router.put("/", auth, profileValidator, async (req, res) => {
   const vResult = validationResult(req);
   if (isEmpty(vResult)) return res.status(400).json(vResult);
   try {
