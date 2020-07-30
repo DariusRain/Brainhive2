@@ -9,7 +9,7 @@ const profileValidator = [
   check("fName", "First Name is required.").not().isEmpty(),
   check("lName", "Last Name is required.").not().isEmpty(),
   check("name", "Name is required.").not().isEmpty(),
-  check("githubUrl", "Invalid URL.").optional.isURL,
+  check("githubUrl", "Invalid URL.").optional().isURL(),
   check("twitterUrl", "Invalid URL.").optional().isURL(),
   check("youtubeUrl", "Invalid URl.").optional().isURL(),
   check("email", "Invalid Email").isEmail(),
@@ -28,14 +28,28 @@ router.get("/all", auth, async (req, res) => {
   }
 });
 
+// @route     GET '/api/profiles/:id'
+// @desc      Return user's profile by id.
+// @access    Private -> Registered users
+router.get("/:id", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id);
+    return res.status(200).json({ profile });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: { message: error.message } });
+  }
+});
 
 // @route     POST '/api/profiles'
 // @desc      New Profile.
 // @access    Private -> Registered users.
 router.post("/", profileValidator, async (req, res) => {
   const vResult = validationResult(req);
-  if (isEmpty(vResult)) return res.status(400).json(vResult);
-  try {
+  if (isEmpty(vResult)) { 
+    return res.status(400).json(vResult);
+  }
+    try {
     const profile = await Profile.create(req.body);
 
     if (isEmpty(profile)) {
@@ -51,13 +65,48 @@ router.post("/", profileValidator, async (req, res) => {
   }
 });
 
+// @route     PUT '/api/profiles'
+// @desc      Update Profile.
+// @access    Private -> Registered users.
+router.put("/", auth, profileValidator, async (req, res) => {
+  const vResult = validationResult(req);
+  if (isEmpty(vResult)) return res.status(400).json(vResult);
+  try {
+    const updatedProfile = await Profile.findOneAndUpdate(
+      { user: req.user.id },
+      req.body
+    );
+    if(!updatedProfile) {
+      res.status(400).json({msg: "Bad request."})
+    }
+    res.status(201).json(updatedProfile)
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: { message: error.message } });
+  }
+});
 
+// @route     DELETE '/api/profiles'
+// @desc      New Profile.
+// @access    Private -> Registered users.
+router.delete("/", profileValidator, async (req, res) => {
+  const vResult = validationResult(req);
+  if (isEmpty(vResult)) return res.status(400).json(vResult);
+  try {
+    const profile = await Profile.findOneAndRemove({ user: req.user.id });
 
+    if (isEmpty(profile)) {
+      return res.status(400).json({ errors: { message: "No Profile found" } });
+    }
+
+    return res.status(201).json({ msg: "Profile deleted" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ error: { message: error.message } });
+  }
+});
 
 module.exports = router;
-
-
-
 
 // Class Version. (Allready did this part see "/self")
 
