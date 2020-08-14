@@ -106,4 +106,59 @@ router.post(
   }
 );
 
+// @route PUT /api/posts/:             postId/like
+// @desc Likie a post based on ID
+// @access PRIVATE
+
+// POSS-TO-DO: Return array
+
+// epic: Add a like from the user to a post and return the like count.
+
+// Pseudo               
+// confirm logged in. (AUTH MIDDLEWARE)
+// pull the post w/ id
+// decide if we are linking it or unliking a post.
+// Pull from req.body if like or unlike (FRONT-END-DECIDES)
+//  if liking
+//    pushing the userId into the likes array.
+//  else unliking
+//    delete the id from the array
+// return the number of likes to the requester
+// -- Catch errors.
+
+router.put("/:postId/like", auth, (req, res) => {
+
+try {
+  if (req.body.like) {
+    const post = await Post.findByIdAndUpdate({_id: req.})
+  } else  {
+    const post = await Post.findByIdAndUpdate();
+  }
+} catch (error) {
+  console.error(error.message)
+}
+}
+
+// ** Non-locking version**
+// router.put("/:postId/like", auth, (req, res) => {
+//   try { 
+//   const post = await Post.findById(req.params.postId).select("likes");
+//    if (!profile) {
+//      res.status(404).json({msg: "Profile not found."});
+//    }
+//    if (req.body.like) {
+//      post.likes.push(req.user.id);
+//    } else {
+//      const index = post.likes.indexOf(req.user.id);
+//      post.likes.splice(index, 1);
+//    }
+//    post.save()
+//    res.status(201).json(post.likes.length); 
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({msg : "Server error."})
+//   }
+// })
+
+
 module.exports = router;
